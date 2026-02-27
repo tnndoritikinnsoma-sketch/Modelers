@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DOY Midoru</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  height:100%;
+  font-family:sans-serif;
+  overflow-x:hidden;
+}
+
+/* 背景 */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url("https://i.pinimg.com/originals/2b/75/3d/2b753d1808966a2c8c556a9d11267f8e.gif") center/cover no-repeat;
+  z-index:-2;
+}
+
+.glass{
+  position:relative;
+  border-radius:32px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(35px) saturate(160%);
+  border:1px solid rgba(255,255,255,0.4);
+}
+
+.wrapper{
+  width:clamp(300px, 90%, 900px);
+}
+
+.floating{
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+  100%{transform:translateY(0);}
+}
+
+.shop-card{
+  border-radius:22px;
+  padding:20px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.25);
+  transition:0.3s;
+  cursor:pointer;
+}
+
+.shop-card:hover{
+  transform:translateY(-6px);
+  background:rgba(255,255,255,0.12);
+}
+
+/* ハンバーガー */
+.menu-btn{
+  position:fixed;
+  top:20px;
+  left:20px;
+  z-index:50;
+  cursor:pointer;
+}
+
+.menu-btn div{
+  width:28px;
+  height:3px;
+  background:white;
+  margin:6px 0;
+  border-radius:2px;
+}
+
+/* 設定パネル */
+#settingsPanel{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:30px;
+  color:white;
+  transform:translateY(-100%);
+}
+</style>
+</head>
+
+<body class="flex flex-col items-center justify-center min-h-screen text-white p-6 gap-8">
+
+<!-- ハンバーガー -->
+<div class="menu-btn" onclick="openSettings()">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+
+<!-- 設定パネル -->
+<div id="settingsPanel">
+  <h2 class="text-3xl font-bold">Settings</h2>
+
+  <a href="https://x.gd/exploit_support"
+     target="_blank"
+     class="px-8 py-4 rounded-xl bg-green-500 hover:bg-green-600 transition font-bold">
+     LINE OpenChat 招待
+  </a>
+
+  <button onclick="closeSettings()"
+          class="px-6 py-3 rounded-xl bg-white/20 hover:bg-white/30 transition">
+    戻る
+  </button>
+</div>
+
+<!-- メインカード -->
+<div id="mainCard" class="glass wrapper p-10 text-center">
+
+  <div class="w-28 h-28 mx-auto mb-6 rounded-full overflow-hidden border border-white/40">
+    <img id="icon"
+         src="https://i.pinimg.com/736x/03/d4/e0/03d4e04ea1654674428bc8b10a315104.jpg"
+         class="w-full h-full object-cover">
+  </div>
+
+  <!-- タイトル改行 -->
+  <h1 class="text-4xl font-black mb-4 leading-tight">
+    DOY<br>Midoru
+  </h1>
+
+  <div class="text-2xl font-bold mb-6">
+    <span id="member-count">0人</span> 参加中
+  </div>
+
+  <a href="https://discord.gg/midoru"
+     class="floating px-8 py-4 rounded-2xl bg-white/10 border border-white/30 hover:bg-white/20 transition">
+     Join Server
+  </a>
+
+</div>
+
+<script>
+const target = 3952;
+let obj = {val:0};
+
+gsap.to(obj,{
+  val:target,
+  duration:2.5,
+  ease:"power2.out",
+  onUpdate:()=>{
+    document.getElementById("member-count").textContent =
+      Math.round(obj.val).toLocaleString()+"人";
+  }
+});
+
+gsap.from("#mainCard",{
+  opacity:0,
+  y:60,
+  duration:1.2,
+  ease:"power3.out"
+});
+
+gsap.to("#icon",{
+  rotation:360,
+  duration:20,
+  repeat:-1,
+  ease:"linear"
+});
+
+function openSettings(){
+  gsap.to("#settingsPanel",{y:"100%",duration:0});
+  gsap.to("#settingsPanel",{y:"0%",duration:0.6,ease:"power3.out"});
+}
+
+function closeSettings(){
+  gsap.to("#settingsPanel",{y:"-100%",duration:0.6,ease:"power3.in"});
+}
+</script>
+
+</body>
+</html>
